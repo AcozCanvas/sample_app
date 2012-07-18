@@ -28,6 +28,26 @@ describe "User pages" do
       it "should not create a user" do
         expect { click_button submit }.not_to change(User, :count)
       end
+
+      describe "after submission" do
+        before { click_button submit }
+
+        it { should have_selector 'title', text: 'Sign up' }
+        it { should have_selector '#error_explanation .alert-error', text: 'error' }
+      end
+
+      describe "with invalid password" do
+        before do
+          fill_in "Name",         with: "Example User"
+          fill_in "Email",        with: "user@example.com"
+          fill_in "Password",     with: ""
+          fill_in "Confirmation", with: ""
+          click_button submit
+        end
+
+        it { should have_selector '#error_explanation', text: "Password can't be blank" }
+        it { should_not have_selector '#error_explanation', text: "Password digest" }
+      end
     end
 
     describe "with valid information" do
@@ -40,6 +60,13 @@ describe "User pages" do
 
       it "should create a user" do
         expect { click_button submit }.to change(User, :count).by(1)
+      end
+
+      describe "after submisstion" do
+        before { click_button submit }
+
+        it { should have_selector 'title', text: full_title("Example User") }
+        it { should have_selector '.alert.alert-success', text: "Welcome to the Sample App!" }
       end
     end
   end
