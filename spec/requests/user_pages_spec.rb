@@ -12,7 +12,7 @@ describe "User pages" do
 
     before(:each) do
       sign_in user
-      visit_users_path
+      visit users_path
     end
 
     it { should have_selector 'title', text: 'All users' }
